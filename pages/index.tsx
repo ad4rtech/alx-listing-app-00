@@ -1,93 +1,53 @@
-'use client';
+import { PROPERTYLISTINGSAMPLE } from "@/constants";
+import Image from "next/image";
+import HERO_IMAGE from '@/public/assets/images/image 19.png';
+import PropertyCard from "@/components/common/PropertyCard";
 
-import { useState } from 'react';
-import Image from 'next/image';
-import { PROPERTYLISTINGSAMPLE, HERO_BACKGROUND_IMAGE, FILTER_OPTIONS } from '@/constants';
-import Pill from '@/components/ui/Pill';
-import PropertyCard from '@/components/PropertyCard';
-import { PropertyProps } from '@/interfaces';
-
-export default function Home() {
-    const [activeFilter, setActiveFilter] = useState<string | null>(null);
-    const [filteredProperties, setFilteredProperties] = useState<PropertyProps[]>(PROPERTYLISTINGSAMPLE);
-
-    const handleFilterClick = (filter: string) => {
-        setActiveFilter(prev => prev === filter ? null : filter);
-
-        if (filter === 'All' || !filter) {
-            setFilteredProperties(PROPERTYLISTINGSAMPLE);
-        } else {
-            const filtered = PROPERTYLISTINGSAMPLE.filter(property =>
-                property.category.some(cat => cat.toLowerCase().includes(filter.toLowerCase()))
-            );
-            setFilteredProperties(filtered);
-        }
-    };
-
-    return (
-        <div className="min-h-screen bg-gray-50">
-            {/* Hero Section */}
-            <section className="relative h-screen flex items-center justify-center overflow-hidden">
-                <Image
-                    src={HERO_BACKGROUND_IMAGE}
-                    alt="Hero background"
-                    fill
-                    className="object-cover"
-                    priority
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                    <div className="text-center text-white max-w-4xl mx-auto px-4">
-                        <h1 className="text-5xl md:text-6xl font-light mb-6">
-                            Find your favorite place here!
-                        </h1>
-                        <p className="text-xl md:text-2xl text-gray-200">
-                            The best prices for over 2 million properties worldwide.
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                {/* Filters Section */}
-                <section className="mb-8">
-                    <div className="flex flex-wrap gap-3 mb-6">
-                        <Pill
-                            label="All"
-                            isActive={activeFilter === null || activeFilter === 'All'}
-                            onClick={() => handleFilterClick('All')}
-                        />
-                        {FILTER_OPTIONS.map((filter) => (
-                            <Pill
-                                key={filter}
-                                label={filter}
-                                isActive={activeFilter === filter}
-                                onClick={() => handleFilterClick(filter)}
-                            />
-                        ))}
-                    </div>
-
-                    {/* Results Count */}
-                    <p className="text-sm text-gray-600">
-                        Showing {filteredProperties.length} of {PROPERTYLISTINGSAMPLE.length} properties
-                    </p>
-                </section>
-
-                {/* Listings Section */}
-                <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {filteredProperties.map((property, index) => (
-                        <PropertyCard key={index} property={property} />
-                    ))}
-                </section>
-
-                {/* Load More Button (if needed) */}
-                {filteredProperties.length < PROPERTYLISTINGSAMPLE.length && (
-                    <div className="text-center mt-12">
-                        <button className="bg-white border border-gray-300 hover:border-gray-400 text-gray-700 px-6 py-3 rounded-full text-sm font-medium transition-colors">
-                            Show more properties
-                        </button>
-                    </div>
-                )}
-            </div>
+const Home: React.FC = ()=>{
+  return(
+    
+    <div className="max-w-full mx-auto">
+      {/* <Hero Section/> */}
+      <section className="relative h-[60vh] md:h-[70vh] w-full bg-cover bg-center flex items-center justify-center text-white">
+        <div className="absolute inset-0 bg-black opacity-100">
+          <Image
+          src={HERO_IMAGE}
+          alt="House Image"
+          fill
+          className="object-cover"
+          loading="eager"
+          />
         </div>
-    );
-}
+        <div className="relative z-10 text-center px-4">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 drop-shadow-lg">Find your favorite place here!</h1>
+          <p className="text-xl sm:text-2xl font-medium drop-shadow-md">The best prices for over 2 million properties worldwide</p>
+        </div>
+      </section>
+
+      {/* Filter Section */}
+      <section className="max-w-7xl mx-auto my-8 px-4 flex flex-wrap gap-3">
+  {["Top Villa", "Self Checkin", "Luxury", "Beachfront", "Mountain"].map(
+    (filter) => (
+      <span
+        key={filter}
+        className="px-4 py-2 bg-gray-100 rounded-full cursor-pointer hover:bg-blue-100 transition"
+      >
+        {filter}
+      </span>
+    )
+  )}
+</section>
+
+
+      {/* Listing Section */}
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {PROPERTYLISTINGSAMPLE.map((property)=>(
+          <PropertyCard key={property.name} property={property}/>
+        ))}
+      </section>
+      
+    </div>
+  )
+};
+
+export default Home;
